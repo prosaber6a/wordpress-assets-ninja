@@ -25,6 +25,7 @@ class AssetsNinja {
 		$this->version = time();
 		add_action( 'plugins_loaded', array( $this, 'load_text_domain' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_front_assets' ) );
+		add_action('admin_enqueue_scripts', array($this, 'load_admin_assets'));
 	}
 
 	public function load_text_domain() {
@@ -44,11 +45,21 @@ class AssetsNinja {
 		wp_enqueue_script( 'asn-more-js', ASN_ASSETS_PUBLIC_DIR . "/js/more.js", array( 'jquery' ), $this->version, true );
 
 		$data = array(
-			"name"=>"Saber",
-			"url"=>"http://saberhr.com/"
+			"name" => "Saber",
+			"url"  => "http://saberhr.com/"
 		);
-		wp_localize_script('asn-more-js', 'site_data', $data);
+		wp_localize_script( 'asn-more-js', 'site_data', $data );
 	}
+
+	public function load_admin_assets($screen) {
+		$_screen = get_current_screen();
+		if ('edit.php' == $screen && ('page' == $_screen->post_type || 'book' == $_screen->post_type)) {
+			wp_enqueue_script('asn-admin-js', ASN_ASSETS_ADMIN_DIR . "/js/admin.js", array('jquery'), $this->version, true);
+		}
+	}
+
+
+
 }
 
 
