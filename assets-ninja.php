@@ -25,7 +25,7 @@ class AssetsNinja {
 		$this->version = time();
 		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_text_domain' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'load_front_assets' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'load_front_assets' ), 11 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_assets' ) );
 	}
 
@@ -41,6 +41,7 @@ class AssetsNinja {
 	}
 
 	public function load_front_assets() {
+//		wp_enqueue_style( 'asn-main-css', ASN_ASSETS_PUBLIC_DIR . "css/main.css", array('fontawesome-css'), $this->version);
 		wp_enqueue_style( 'asn-main-css', ASN_ASSETS_PUBLIC_DIR . "/css/main.css", null, $this->version );
 		/*wp_enqueue_script( 'asn-main-js', ASN_ASSETS_PUBLIC_DIR . "/js/main.js", array(
 			'jquery',
