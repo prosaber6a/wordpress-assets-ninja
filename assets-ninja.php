@@ -23,9 +23,17 @@ class AssetsNinja {
 
 	public function __construct() {
 		$this->version = time();
+		add_action( 'init', array( $this, 'init' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_text_domain' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_front_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_assets' ) );
+	}
+
+	public function init() {
+		wp_deregister_style( "fontawesome-css" );
+		wp_register_style( 'fontawesome-css', '//stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' );
+		wp_deregister_script( "tiny-slider-js" );
+		wp_register_script( "tiny-slider-js", "//cdn.jsdelivr.net/npm/tiny-slider@2.9.2/dist/tiny-slider.min.js", null, $this->version, true );
 	}
 
 	public function load_text_domain() {
@@ -45,7 +53,7 @@ class AssetsNinja {
 		wp_enqueue_script( 'asn-more-js', ASN_ASSETS_PUBLIC_DIR . "/js/more.js", array( 'jquery' ), $this->version, true );*/
 
 		$js_files = array(
-			'asn-main-js' => array(
+			'asn-main-js'    => array(
 				'path' => ASN_ASSETS_PUBLIC_DIR . "/js/main.js",
 				'dep'  => array( 'jquery', 'asn-another-js' )
 			),
@@ -53,7 +61,7 @@ class AssetsNinja {
 				'path' => ASN_ASSETS_PUBLIC_DIR . "/js/another.js",
 				'dep'  => array( 'jquery', 'asn-more-js' )
 			),
-			'asn-more-js' => array( 'path' => ASN_ASSETS_PUBLIC_DIR . "/js/more.js", 'dep' => array( 'jquery' ) ),
+			'asn-more-js'    => array( 'path' => ASN_ASSETS_PUBLIC_DIR . "/js/more.js", 'dep' => array( 'jquery' ) ),
 		);
 
 		foreach ( $js_files as $handle => $fileinfo ) {
