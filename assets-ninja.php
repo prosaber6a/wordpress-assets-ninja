@@ -14,9 +14,9 @@
  * Domain Path:       /languages
  */
 
-define( "ASN_ASSETS_DIR", plugin_dir_url( __FILE__ ) . "/assets/" );
-define( "ASN_ASSETS_PUBLIC_DIR", plugin_dir_url( __FILE__ ) . "/assets/public/" );
-define( "ASN_ASSETS_ADMIN_DIR", plugin_dir_url( __FILE__ ) . "/assets/admin/" );
+define( "ASN_ASSETS_DIR", plugin_dir_url( __FILE__ ) . "assets/" );
+define( "ASN_ASSETS_PUBLIC_DIR", plugin_dir_url( __FILE__ ) . "assets/public/" );
+define( "ASN_ASSETS_ADMIN_DIR", plugin_dir_url( __FILE__ ) . "assets/admin/" );
 
 class AssetsNinja {
 	private $version;
@@ -32,6 +32,7 @@ class AssetsNinja {
 	}
 
 	public function load_front_assets() {
+		wp_enqueue_style('asn-main-css', ASN_ASSETS_PUBLIC_DIR . "/css/main.css", null, $this->version);
 		wp_enqueue_script( 'asn-main-js', ASN_ASSETS_PUBLIC_DIR . "/js/main.js", array( 'jquery', 'asn-another-js' ), $this->version, true );
 		wp_enqueue_script( 'asn-another-js', ASN_ASSETS_PUBLIC_DIR . "/js/another.js", array( 'jquery', 'asn-more-js' ), $this->version, true );
 		wp_enqueue_script( 'asn-more-js', ASN_ASSETS_PUBLIC_DIR . "/js/more.js", array( 'jquery' ), $this->version, true );
