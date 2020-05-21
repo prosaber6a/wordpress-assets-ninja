@@ -27,6 +27,9 @@ class AssetsNinja {
 		add_action( 'plugins_loaded', array( $this, 'load_text_domain' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_front_assets' ), 11 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_assets' ) );
+		add_shortcode( 'bgmedia', array( $this, 'bgmedia_shortcode' ) );
+
+
 	}
 
 	public function init() {
@@ -74,6 +77,22 @@ class AssetsNinja {
 			"url"  => "http://saberhr.com/"
 		);
 		wp_localize_script( 'asn-more-js', 'site_data', $data );
+
+		$attachment_image_src = wp_get_attachment_image_src( 107, 'medium' );
+		$data                 = <<<EOD
+#bgmedia {
+background-image:url($attachment_image_src[0]);
+}
+EOD;
+
+		wp_add_inline_style( 'asn-main-css', $data );
+
+		$inline_js_data = <<<EOD
+alert("Inline JS");
+EOD;
+
+		wp_add_inline_script( 'asn-more-js', $inline_js_data );
+
 	}
 
 	public function load_admin_assets( $screen ) {
@@ -81,6 +100,18 @@ class AssetsNinja {
 		if ( 'edit.php' == $screen && ( 'page' == $_screen->post_type || 'book' == $_screen->post_type ) ) {
 			wp_enqueue_script( 'asn-admin-js', ASN_ASSETS_ADMIN_DIR . "/js/admin.js", array( 'jquery' ), $this->version, true );
 		}
+	}
+
+
+	public function bgmedia_shortcode( $attributes ) {
+
+
+		$shortcode_output = <<<EOD
+<div id="bgmedia" ></div> 
+EOD;
+
+		return $shortcode_output;
+
 	}
 
 
