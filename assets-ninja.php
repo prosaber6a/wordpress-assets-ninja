@@ -25,7 +25,7 @@ class AssetsNinja {
 		$this->version = time();
 		add_action( 'plugins_loaded', array( $this, 'load_text_domain' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'load_front_assets' ) );
-		add_action('admin_enqueue_scripts', array($this, 'load_admin_assets'));
+		add_action( 'admin_enqueue_scripts', array( $this, 'load_admin_assets' ) );
 	}
 
 	public function load_text_domain() {
@@ -34,7 +34,7 @@ class AssetsNinja {
 
 	public function load_front_assets() {
 		wp_enqueue_style( 'asn-main-css', ASN_ASSETS_PUBLIC_DIR . "/css/main.css", null, $this->version );
-		wp_enqueue_script( 'asn-main-js', ASN_ASSETS_PUBLIC_DIR . "/js/main.js", array(
+		/*wp_enqueue_script( 'asn-main-js', ASN_ASSETS_PUBLIC_DIR . "/js/main.js", array(
 			'jquery',
 			'asn-another-js'
 		), $this->version, true );
@@ -42,7 +42,23 @@ class AssetsNinja {
 			'jquery',
 			'asn-more-js'
 		), $this->version, true );
-		wp_enqueue_script( 'asn-more-js', ASN_ASSETS_PUBLIC_DIR . "/js/more.js", array( 'jquery' ), $this->version, true );
+		wp_enqueue_script( 'asn-more-js', ASN_ASSETS_PUBLIC_DIR . "/js/more.js", array( 'jquery' ), $this->version, true );*/
+
+		$js_files = array(
+			'asn-main-js' => array(
+				'path' => ASN_ASSETS_PUBLIC_DIR . "/js/main.js",
+				'dep'  => array( 'jquery', 'asn-another-js' )
+			),
+			'asn-another-js' => array(
+				'path' => ASN_ASSETS_PUBLIC_DIR . "/js/another.js",
+				'dep'  => array( 'jquery', 'asn-more-js' )
+			),
+			'asn-more-js' => array( 'path' => ASN_ASSETS_PUBLIC_DIR . "/js/more.js", 'dep' => array( 'jquery' ) ),
+		);
+
+		foreach ( $js_files as $handle => $fileinfo ) {
+			wp_enqueue_script( $handle, $fileinfo['path'], $fileinfo['dep'], $this->version, true );
+		}
 
 		$data = array(
 			"name" => "Saber",
@@ -51,13 +67,12 @@ class AssetsNinja {
 		wp_localize_script( 'asn-more-js', 'site_data', $data );
 	}
 
-	public function load_admin_assets($screen) {
+	public function load_admin_assets( $screen ) {
 		$_screen = get_current_screen();
-		if ('edit.php' == $screen && ('page' == $_screen->post_type || 'book' == $_screen->post_type)) {
-			wp_enqueue_script('asn-admin-js', ASN_ASSETS_ADMIN_DIR . "/js/admin.js", array('jquery'), $this->version, true);
+		if ( 'edit.php' == $screen && ( 'page' == $_screen->post_type || 'book' == $_screen->post_type ) ) {
+			wp_enqueue_script( 'asn-admin-js', ASN_ASSETS_ADMIN_DIR . "/js/admin.js", array( 'jquery' ), $this->version, true );
 		}
 	}
-
 
 
 }
